@@ -11,3 +11,15 @@ class Loan:
         self.data_emprestimo = data_emprestimo
         self.data_devolucao = data_devolucao
         self.devolvido = False
+        
+    def marcar_devolvido(self):
+        self.devolvido = True
+
+    def to_dict(self):
+        return {
+            "aluno": self.aluno,
+            "livro": self.livro,
+            "data_emprestimo": self.data_emprestimo,
+            "data_devolucao": self.data_devolucao,
+            "devolvido": self.devolvido
+        }
