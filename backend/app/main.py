@@ -7,7 +7,6 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-
     db.command("ping")
 
     return {
