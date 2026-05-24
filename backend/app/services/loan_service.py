@@ -1,37 +1,115 @@
 # services/loan_service.py
 
+from bson import ObjectId
+
+from app.config.database import db
 from app.models.loan_model import Loan
 
 
 class LoanService:
 
     @staticmethod
-    def create_loan(
-        aluno,
-        livro,
-        data_emprestimo,
-        data_devolucao
-    ):
+    def create_loan(data):
 
-        sucesso = livro.emprestar()
+        aluno = db.students.find_one({
+            "_id": ObjectId(data.student_id)
+        })
 
-        if not sucesso:
-            return None
+        if not aluno:
+            return {
+                "error": "Aluno não encontrado"
+            }
 
-        loan = Loan(
-            aluno=aluno.to_dict(),
-            livro=livro.to_dict(),
-            data_emprestimo=data_emprestimo,
-            data_devolucao=data_devolucao
+        livro = db.books.find_one({
+            "_id": ObjectId(data.book_id)
+        })
+
+        if not livro:
+            return {
+                "error": "Livro não encontrado"
+            }
+
+        if livro["quantidade_disponivel"] <= 0:
+            return {
+                "error": "Livro indisponível"
+            }
+
+        db.books.update_one(
+            {
+                "_id": ObjectId(data.book_id)
+            },
+            {
+                "$inc": {
+                    "quantidade_disponivel": -1
+                }
+            }
         )
 
-        return loan
+        loan = Loan(
+            aluno={
+                "_id": str(aluno["_id"]),
+                "nome": aluno["nome"]
+            },
+
+            livro={
+                "_id": str(livro["_id"]),
+                "titulo": livro["titulo"]
+            },
+
+            data_emprestimo=data.data_emprestimo,
+            data_devolucao=data.data_devolucao
+        )
+
+        result = db.loans.insert_one(
+            loan.to_dict()
+        )
+
+        return {
+            "message": "Empréstimo realizado",
+            "id": str(result.inserted_id)
+        }
 
     @staticmethod
-    def return_loan(loan, livro):
+    def return_loan(loan_id):
 
-        livro.devolver()
+        loan = db.loans.find_one({
+            "_id": ObjectId(loan_id)
+        })
 
-        loan.marcar_devolvido()
+        if not loan:
+            return {
+                "error": "Empréstimo não encontrado"
+            }
 
-        return loan
+        if loan["devolvido"]:
+            return {
+                "error": "Livro já devolvido"
+            }
+
+        book_id = loan["livro"]["_id"]
+
+        db.books.update_one(
+            {
+                "_id": ObjectId(book_id)
+            },
+            {
+                "$inc": {
+                    "quantidade_disponivel": 1
+                }
+            }
+        )
+
+        db.loans.update_one(
+            {
+                "_id": ObjectId(loan_id)
+            },
+            {
+                "$set": {
+                    "devolvido": True
+                }
+            }
+        )
+
+        return {
+            "message": "Livro devolvido"
+        }
