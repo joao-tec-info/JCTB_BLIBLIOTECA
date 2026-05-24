@@ -1,6 +1,25 @@
-class ApiService:
-    def __init__(self, base_url: str):
-        self.base_url = base_url
+import requests
 
-    def get(self, path: str):
-        return f"GET {self.base_url}/{path}"
+from utils.constants import API_URL
+
+
+class ApiService:
+
+    @staticmethod
+    def get_books():
+
+        response = requests.get(
+            f"{API_URL}/books/"
+        )
+
+        return response.json()
+
+    @staticmethod
+    def create_book(data):
+
+        response = requests.post(
+            f"{API_URL}/books/",
+            json=data
+        )
+
+        return response.json()

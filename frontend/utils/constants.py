@@ -1,2 +1,3 @@
-API_BASE_URL = "http://localhost:8000/api"
-APP_NAME = "JCTB Biblioteca"
+API_URL = "http://127.0.0.1:8000"
+
+APP_NAME = "Biblioteca JCTB"

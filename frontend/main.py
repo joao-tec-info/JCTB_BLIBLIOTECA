@@ -1,6 +1,13 @@
-def main():
-    print("Frontend main")
+import flet as ft
 
 
-if __name__ == "__main__":
-    main()
+def main(page: ft.Page):
+
+    page.title = "JCTB Biblioteca"
+
+    page.add(
+        ft.Text("Frontend funcionando")
+    )
+
+
+ft.app(target=main)
