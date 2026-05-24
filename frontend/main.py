@@ -1,13 +1,8 @@
-import flet as ft
+from nicegui import ui
+
+import screens.books_screen
 
 
-def main(page: ft.Page):
-
-    page.title = "JCTB Biblioteca"
-
-    page.add(
-        ft.Text("Frontend funcionando")
-    )
-
-
-ft.app(target=main)
+ui.run(
+    reload=True
+)

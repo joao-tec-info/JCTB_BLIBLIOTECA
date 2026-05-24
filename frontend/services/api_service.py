@@ -1,25 +1,17 @@
-import requests
+import httpx
 
-from utils.constants import API_URL
+from utils.constants import API_BASE_URL
 
 
 class ApiService:
 
     @staticmethod
-    def get_books():
+    async def get_books():
 
-        response = requests.get(
-            f"{API_URL}/books/"
-        )
+        async with httpx.AsyncClient() as client:
 
-        return response.json()
+            response = await client.get(
+                f"{API_BASE_URL}/books/"
+            )
 
-    @staticmethod
-    def create_book(data):
-
-        response = requests.post(
-            f"{API_URL}/books/",
-            json=data
-        )
-
-        return response.json()
+            return response.json()
