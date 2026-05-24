@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from app.config.database import db
+from app.routes.books import router as books_router
+from app.routes.students import router as students_router
 
 
 app = FastAPI()
-
+app.include_router(books_router)
+app.include_router(students_router)
 
 @app.get("/")
 def home():
