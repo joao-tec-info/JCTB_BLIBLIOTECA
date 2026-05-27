@@ -29,7 +29,7 @@ def open_loan_form(on_saved) -> None:
             "Carregando dados..."
         )
 
-        # COMPONENTES
+        # SELECTS
 
         student_sel = ui.select(
             {},
@@ -48,6 +48,8 @@ def open_loan_form(on_saved) -> None:
         ).props(
             "outlined dense"
         )
+
+        # DATAS
 
         with ui.row().classes(
             "w-full gap-3 no-wrap"
@@ -80,42 +82,43 @@ def open_loan_form(on_saved) -> None:
             try:
 
                 students = await api.list_students()
-
                 books = await api.list_books()
 
-                # somente disponíveis
+                print("ALUNOS:", students)
+                print("LIVROS:", books)
+
+                if students is None:
+                    students = []
+
+                if books is None:
+                    books = []
 
                 books = [
-
                     b for b in books
-
-                    if b["quantidade_disponivel"] > 0
-
+                    if b.get("quantidade_disponivel", 0) > 0
                 ]
 
                 student_sel.options = {
-
-                    s["_id"]: (
-                        f'{s["nome"]} '
-                        f'({s["turma"]})'
-                    )
-
+                    s["_id"]: f'{s["nome"]} ({s["turma"]})'
                     for s in students
                 }
 
                 book_sel.options = {
-
                     b["_id"]: (
                         f'{b["titulo"]} '
                         f'({b["quantidade_disponivel"]} disponíveis)'
                     )
-
                     for b in books
                 }
+
+                student_sel.update()
+                book_sel.update()
 
                 loading.set_visibility(False)
 
             except Exception as e:
+
+                print("ERRO LOAD DATA:", e)
 
                 loading.text = (
                     f"Erro ao carregar dados: {str(e)}"
@@ -157,9 +160,7 @@ def open_loan_form(on_saved) -> None:
 
             try:
 
-                await api.create_loan(
-                    payload
-                )
+                await api.create_loan(payload)
 
                 ui.notify(
                     "Empréstimo registrado",
@@ -171,6 +172,8 @@ def open_loan_form(on_saved) -> None:
                 await on_saved()
 
             except Exception as e:
+
+                print("ERRO SAVE:", e)
 
                 ui.notify(
                     f"Erro: {str(e)}",
