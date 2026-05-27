@@ -19,7 +19,7 @@ from utils.constants import APP_NAME, COLORS
 
 
 # Estilos globais
-ui.add_head_html(f"""
+ESTILOS_GLOBAIS = f"""
 <style>
   body {{
     background-color: {COLORS['background']};
@@ -34,7 +34,11 @@ ui.add_head_html(f"""
     border-bottom: 1px solid {COLORS['border']};
   }}
 </style>
-""")
+"""
+ui.add_head_html(
+    ESTILOS_GLOBAIS,
+    shared=True
+)
 
 
 @ui.page("/")
@@ -60,6 +64,7 @@ def page_loans():
 @ui.page("/login")
 def page_login():
     login_screen()
+
 
 
 ui.run(

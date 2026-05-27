@@ -48,4 +48,4 @@ def open_student_form(student: dict | None, on_saved) -> None:
             ui.button("Cancelar", on_click=dialog.close).props("flat")
             ui.button("Salvar", on_click=save).props("unelevated color=primary")
 
-    dialog.open()
+    dialog.open() 
