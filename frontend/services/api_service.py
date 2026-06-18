@@ -1,6 +1,12 @@
 import httpx
+import os
+from dotenv import load_dotenv
 
-from utils.constants import API_BASE_URL
+load_dotenv()
+
+API_BASE_URL = os.environ.get(
+    "API_BASE_URL"
+)
 
 
 class APIService:
