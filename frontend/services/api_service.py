@@ -131,6 +131,17 @@ class APIService:
             )
 
             return response.json()
+        
+    @staticmethod
+    async def return_loan(loan_id: str):
+
+        async with httpx.AsyncClient() as client:
+
+            response = await client.put(
+                f"{API_BASE_URL}/loans/{loan_id}/return"
+            )
+
+            return response.json()
 
 
 api = APIService()
