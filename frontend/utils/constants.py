@@ -1,5 +1,5 @@
 """Constantes globais do sistema."""
-APP_NAME = "Biblioteca Escolar"
+APP_NAME = "Bliblioteca JCTB"
 APP_SUBTITLE = "Sistema de Gerenciamento"
 
 # Paleta de cores (azul institucional + branco + tons suaves)
