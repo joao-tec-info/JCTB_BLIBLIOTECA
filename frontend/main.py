@@ -9,7 +9,7 @@ A integração com a API FastAPI/MongoDB deve ser feita posteriormente em
 services/api_service.py, mantendo a mesma interface pública.
 """
 from nicegui import ui
-
+import os
 from screens.dashboard_screen import dashboard_screen
 from screens.books_screen import books_screen
 from screens.students_screen import students_screen
@@ -71,5 +71,6 @@ ui.run(
     title=APP_NAME,
     favicon="📚",
     reload=False,
-    port=8080,
+    host="0.0.0.0",
+    port=int(os.environ.get("PORT", 8080)),
 )
